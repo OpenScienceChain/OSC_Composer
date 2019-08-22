@@ -1,0 +1,93 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ /**
+ * Models for scientific data sharing business network.
+ */
+
+namespace org.osc
+
+enum DataStatus {
+    o AVAILABLE
+    o NOT_AVAILABLE
+}
+
+enum Role {
+    o CONTACT_PERSON
+    o PI
+    o COLLECTOR
+}
+
+
+// Concept of contact, for both company user and personal user.
+concept ContactInformation {
+    o String firstName
+    o String lastName
+    o String phoneNumber optional
+    o String email
+    o String address optional
+    o String orgName optional
+}
+
+// Basic Participant class, for all actual participants.
+abstract participant BaseParticipant identified by pid{
+    o String pid
+    o ContactInformation contact
+}
+
+participant DataUser extends BaseParticipant {
+    o String[] activeDataIds optional
+}
+
+// Basic Asset class, for all actual assets.
+abstract asset BaseAsset identified by aid {
+    o String aid
+}
+
+asset Data extends BaseAsset {
+    o DataStatus status default="NOT_AVAILABLE"
+    --> DataUser provider
+    o Role role optional 
+    o String title
+    o String description
+    o String format
+    o String url optional
+    o String time_range optional
+    o String spatial_coverage optional
+}
+
+abstract transaction BaseTransaction {
+}
+
+abstract transaction DataTransaction extends BaseTransaction{
+    --> Data data
+    o DateTime time
+}
+
+// For Data Provider, release a data for public.
+transaction DataReleaseTransaction extends DataTransaction{
+    --> DataUser provider
+}
+
+// For Data Provider, callback a data for public.
+transaction DataCallbackTransaction extends DataTransaction{
+    --> DataUser provider
+}
+
+// For DataUser, comment a data.
+transaction DataCommentTransaction extends DataTransaction {
+    --> DataUser user
+    o String comment
+}
+
