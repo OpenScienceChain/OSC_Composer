@@ -1,4 +1,6 @@
 opensciencechain.org
-Author: Kai Lin; klin@sdsc.edu
+Author: 
+Kai Lin
+klin@sdsc.edu
 
-Initial prototype of OSC - Hyperledger Fabric + Hyperledger Composer
+Initial prototype of OSC with Hyperledger Fabric + Hyperledger Composer
